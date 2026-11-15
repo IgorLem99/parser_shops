@@ -1,0 +1,8 @@
+# результаты и локальные данные
+*.csv
+*.html
+*_files/
+.chrome-profile/
+# бинарники
+/parser
+*.exe

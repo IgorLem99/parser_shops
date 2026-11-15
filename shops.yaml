@@ -1,0 +1,53 @@
+# Описание магазинов. Новый магазин = новый блок, код менять не нужно.
+# Поле можно взять из атрибута: "селектор@атрибут" (если атрибут пуст — берётся текст).
+
+shops:
+  - name: kuper_lenta
+    urls:
+      - https://kuper.ru/lentagp/c/myaso-ptitsa-40ebce3/vse-tovari-kategorii-cc67f80?sid=135379
+    timeout: 60s
+    delay: 2s
+    scroll: true
+    selectors:
+      card: "div[class*='ProductCard_root']"
+      name: "h3[class*='ProductCard_title']@title"
+      price: "[class*='ProductCardPrice_price']"
+      old_price: "[class*='ProductCardPrice_originalPrice']"
+      unit: "[class*='ProductCard_volume']"
+      link: "a[class*='ProductCardLink_root']"
+      image: "img[class*='ProductCard_image']@src"
+      remove: "[class*='SROnly']"
+    category:
+      title_split: " в "
+    pagination:
+      type: param
+      param: page
+      max_pages: 40
+    blocks:
+      - match: "Отключите VPN|Disable VPN"
+        message: "Kuper не пускает этот IP (нужен российский IP или прокси)"
+      - match: "пройдите проверку|не с ботом"
+        message: "антибот-капча: запустите с -headless=false и пройдите её вручную"
+        manual: true
+
+  # Учебный сайт для скрапинга — проверка, что движок универсален (пагинация по ссылке «next»).
+  - name: books_toscrape
+    urls:
+      - https://books.toscrape.com/catalogue/category/books/travel_2/index.html
+      - https://books.toscrape.com/catalogue/page-1.html
+    timeout: 30s
+    selectors:
+      card: "article.product_pod"
+      name: "h3 a@title"
+      price: ".price_color"
+      link: "h3 a"
+      image: "img@src"
+      extra:
+        availability: ".availability"
+        rating: "p.star-rating@class"
+    category:
+      selector: "h1"
+    pagination:
+      type: next
+      next: "li.next a"
+      max_pages: 3
